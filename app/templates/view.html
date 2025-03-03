@@ -1,26 +1,43 @@
-{%extends 'base.html'%}
-{%block title%}View{%endblock%}
-{%block content%}
-
-<div class="container text-center">
-    <h3>View DataBase</h3>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Password</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%for user in users%}
-            <tr>
-                <td>{{user.username}}</td>
-                <td>{{user.email}}</td>
-                <td>{{user.password}}</td>
-            </tr>
-            {%endfor%}
-        </tbody>
+{% extends 'base.html' %}
+{% block title %}View{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h3 class="text-center">View DataBase</h3>
+  
+  <!-- Search Bar -->
+  <form class="d-flex justify-content-center mb-4" method="GET" action="{{ url_for('view') }}">
+    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ request.args.get('q', '') }}">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
+  
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Password</th>
+        {% if session.get('user') %}
+        <th>Actions</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.password }}</td>
+        {% if session.get('user') %}
+        <td>
+            <a href="{{ url_for('update_record', id=user.id) }}" class="btn btn-warning btn-sm">Edit</a>
+            <a href="{{ url_for('delete_record', id=user.id) }}" class="btn btn-danger btn-sm">Delete</a>
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
-
-{%endblock%}
+{% endblock %}
